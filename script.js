@@ -1,6 +1,19 @@
+require("dotenv").config();
 const puppeteer = require("puppeteer");
 
 (async () => {
+  // Get credentials from environment variables
+  const username = process.env.NJUSKALO_USERNAME;
+  const password = process.env.NJUSKALO_PASSWORD;
+
+  if (!username || !password) {
+    console.error("Error: Username or password not found in .env file");
+    console.log(
+      "Please create a .env file with NJUSKALO_USERNAME and NJUSKALO_PASSWORD"
+    );
+    process.exit(1);
+  }
+
   // Launch browser with visible UI for debugging
   const browser = await puppeteer.launch({
     headless: false,
@@ -46,8 +59,8 @@ const puppeteer = require("puppeteer");
     const submitSelector =
       'button[type="submit"], input[type="submit"], .prijavi-se';
 
-    await page.type(emailSelector, "jurandrija645");
-    await page.type(passwordSelector, "kozada17@A");
+    await page.type(emailSelector, username);
+    await page.type(passwordSelector, password);
     await page.click(submitSelector);
 
     // Wait for login to complete
@@ -85,8 +98,8 @@ const puppeteer = require("puppeteer");
         '#email, input[name="email"], input[type="email"]',
         { timeout: 5000 }
       );
-      await page.type(emailSelector, "jurandrija645");
-      await page.type(passwordSelector, "kozada17@A");
+      await page.type(emailSelector, username);
+      await page.type(passwordSelector, password);
       await page.click(submitSelector);
       await page.waitForNavigation({ waitUntil: "networkidle2" });
     }
